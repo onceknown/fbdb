@@ -22,11 +22,11 @@ const Firebase = require('firebase');
 const Database = require('fbdb/Database');
 const Logger = require('fbdb/Logger');
 
-const UsersRefs = require('UsersRefs');
-const UsersService = require('UserService');
+const UsersRefs = require('./UsersRefs');
+const UsersService = require('./UserService');
 
-const TodosRefs = require('TodosRefs');
-const TodosService = require('TodosService');
+const TodosRefs = require('./TodosRefs');
+const TodosService = require('./TodosService');
 
 module.exports = memoize((firebaseUrl) => {
 

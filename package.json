@@ -4,6 +4,7 @@
   "description": "Isomorphic javascript library for creating encapsulated, testable Firebase service layers",
   "main": "fbdb.js",
   "devDependencies": {
+    "babel-polyfill": "^6.3.14",
     "babel-preset-es2015": "^6.3.13",
     "babelify": "^7.2.0",
     "coveralls": "^2.11.4",
@@ -20,8 +21,8 @@
   "scripts": {
     "lint": "eslint --quiet **/*.js",
     "test": "npm run lint && npm run test-node && npm run test-browser",
-    "test-browser": "mochify --recursive --transform [ babelify --presets [ es2015 ] ] --reporter spec",
-    "dev-browser": "mochify --recursive --transform [ babelify --presets [ es2015 ] ] --reporter spec --watch",
+    "test-browser": "mochify --recursive --transform [ babelify --presets [ es2015 ] ] --require babel-polyfill --reporter spec",
+    "dev-browser": "mochify --recursive --transform [ babelify --presets [ es2015 ] ] --require babel-polyfill --reporter spec --watch",
     "test-node": "mochify --recursive --node --reporter spec",
     "dev-node": "mochify --recursive --node --reporter spec --watch",
     "cover": "mochify --recursive --transform [ babelify --presets [ es2015 ] ] --plugin [ mochify-istanbul --report lcovonly --report html --dir ./coverage --exclude '**/+(test|node_modules)/**/*' ]",

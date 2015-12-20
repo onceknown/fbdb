@@ -11,9 +11,33 @@ module.exports.fbMock = function(numChildren) {
   numChildren = numChildren || MAX_CHILD_STUBS;
   let numChildrenStubbed = 0;
   let FirebaseMock = function() {
+    this.callbacks = {};
     this.on = expect.createSpy().andReturn(function() {});
     this.once = expect.createSpy();
     this.off = expect.createSpy();
+
+    this.set = (value, priority, cb) => {
+      if (typeof priority === 'function') {
+        this.callbacks.set = priority;
+      } else {
+        this.callbacks.set = cb;
+      }
+    };
+    this.update = (value, cb) => {
+      this.callbacks.update = cb;
+    };
+    this.remove = (cb) => {
+      this.callbacks.remove = cb;
+    };
+
+    this.callCallback = (method, value) => {
+      this.callbacks[method](value);
+    };
+
+    expect.spyOn(this, 'set').andCallThrough();
+    expect.spyOn(this, 'update').andCallThrough();
+    expect.spyOn(this, 'remove').andCallThrough();
+
     if (numChildrenStubbed < numChildren) {
       numChildrenStubbed++;
       this.child = expect.createSpy().andReturn(new FirebaseMock());

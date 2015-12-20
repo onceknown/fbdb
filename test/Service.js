@@ -41,8 +41,12 @@ describe('Service', () => {
 
       expect.spyOn(handle, 'watch');
       setTimeout(() => {
-        expect(handle.watch.calls.length).toBe(1);
-        done();
+        try {
+          expect(handle.watch.calls.length).toBe(1);
+          done();
+        } catch (e) {
+          done(e);
+        }
       });
     });
   });

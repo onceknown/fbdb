@@ -26,43 +26,31 @@ class Entity extends Handle {
       });
   }
 
-  set(data) {
+  set(data, priority) {
     return new Promise((resolve, reject) => {
+      let cb = (err) => {
+        if (err) {
+          return reject(err);
+        }
+        return resolve();
+      };
       let errors = this.validate(this.data, data);
 
       if (errors) {
         return reject(errors);
       }
 
-      this.fb.set(data, (err) => {
-        if (err) {
-          return reject(err);
-        }
-        return resolve();
-      });
-    });
-  }
-
-  setWithPriority(data, priority) {
-    return new Promise((resolve, reject) => {
-      let errors = this.validate(this.data, data);
-
-      if (errors) {
-        return reject(errors);
+      if (priority !== undefined) {
+        return this.fb.set.call(null, data, priority, cb);
       }
-
-      this.fb.set(data, priority, (err) => {
-        if (err) {
-          return reject(err);
-        }
-        return resolve();
-      });
+      return this.fb.set.call(null, data, cb);
     });
   }
 
   update(data) {
     return new Promise((resolve, reject) => {
-      let newData = Object.assign(JSON.parse(JSON.stringify(this.data)), data);
+      let currentData = JSON.parse(JSON.stringify(this.data || {}));
+      let newData = Object.assign(currentData, data);
       let errors = this.validate(this.data, newData);
 
       if (errors) {
