@@ -4,11 +4,23 @@ const expect = require('expect');
 const fbmocks = require('../fbmocks');
 const Entity = require('../../handles/Entity');
 
-describe('Entity', () => {
+describe('handles/Entity', () => {
 
   class EntitySub extends Entity {
     validate(oldData, newData) {}
   }
+
+  describe('id', () => {
+
+    it('derives id from `fb.key()`', () => {
+      let mock = fbmocks.fbMock();
+      let handle = new Entity(mock);
+      let id = handle.id;
+
+      expect(mock.key).toHaveBeenCalled();
+    });
+
+  });
 
   describe('watch', () => {
 

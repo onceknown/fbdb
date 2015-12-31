@@ -10,6 +10,10 @@ const emitChange = function() {
 
 class Entity extends Handle {
 
+  get id() {
+    return this.fb.key();
+  }
+
   watch() {
     if (this.watcher) {
       return process.nextTick(() => {

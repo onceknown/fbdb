@@ -3,39 +3,31 @@
 const Handle = require('../Handle');
 
 const addChild = function(prevKey, key, handle) {
-  let prevIndex = this.ids.indexOf(prevKey);
+  let prevIndex = prevKey === null ? -1 : this.ids.indexOf(prevKey);
   let insertionIndex = prevIndex + 1;
 
   this.ids.splice(insertionIndex, 0, key);
-  this.handles.splice(insertionIndex, 0, handle);
+  this.handles[key] = handle;
 };
 
 const moveChild = function(key, prevKey) {
-  let removed = removeChild.call(this, key);
-  let prevIndex = this.ids.indexOf(prevKey);
+  removeChild.call(this, key, true);
+  let prevIndex = prevKey === null ? -1 : this.ids.indexOf(prevKey);
+  let insertionIndex = prevIndex + 1;
 
-  if (prevIndex !== -1) {
-    let insertionIndex = prevIndex + 1;
-
-    this.ids.splice(insertionIndex, 0, removed[0]);
-    this.handles.splice(insertionIndex, 0, removed[1]);
-  }
+  this.ids.splice(insertionIndex, 0, key);
 };
 
-const removeChild = function(removedId) {
+const removeChild = function(removedId, keepHandle) {
   let removedHandle;
 
   this.ids = this.ids.filter((id) => {
     return id !== removedId;
   });
-  this.handles = this.handles.filter((handle, i) => {
-    if (this.ids[i] === removedId) {
-      removedHandle = handle;
-      return false;
-    }
-    return true;
-  });
-  return [removedId, removedHandle];
+
+  if (!keepHandle) {
+    delete this.handles[removedId];
+  }
 };
 
 class List extends Handle {
@@ -44,7 +36,7 @@ class List extends Handle {
     let data = [];
 
     for (let i = 0; i < this.ids.length; i++) {
-      data.push({id: this.ids[i], handle: this.handles[i]});
+      data.push(this.handles[this.ids[i]]);
     }
     return data;
   }
@@ -52,7 +44,7 @@ class List extends Handle {
   constructor() {
     super(...arguments);
     this.ids = [];
-    this.handles = [];
+    this.handles = {};
   }
 
   watch() {
@@ -98,6 +90,8 @@ class List extends Handle {
       this.fb.off('child_added', this.addedWatcher);
       this.fb.off('child_removed', this.removedWatcher);
       this.fb.off('child_moved', this.movedWatcher);
+      this.ids = [];
+      this.handles = {};
       delete this.addedWatcher;
       delete this.removedWatcher;
       delete this.movedWatcher;
@@ -105,3 +99,5 @@ class List extends Handle {
   }
 
 }
+
+module.exports = List;

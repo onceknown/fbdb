@@ -12,9 +12,24 @@ module.exports.fbMock = function(numChildren) {
   let numChildrenStubbed = 0;
   let FirebaseMock = function() {
     this.callbacks = {};
-    this.on = expect.createSpy().andReturn(function() {});
-    this.once = expect.createSpy();
-    this.off = expect.createSpy();
+
+    this.key = expect.createSpy();
+
+    this.on = (event, cb) => {
+      this.callbacks.on = this.callbacks.on || {};
+      this.callbacks.on[event] = cb;
+      return cb;
+    };
+
+    this.once = (event, cb) => {
+      this.callbacks.once = this.callbacks.once || {};
+      this.callbacks.once[event] = cb;
+    };
+
+    this.off = (event, cb) => {
+      this.callbacks.off = this.callbacks.off || {};
+      this.callbacks.off[event] = cb;
+    };
 
     this.set = (value, priority, cb) => {
       if (typeof priority === 'function') {
@@ -23,9 +38,11 @@ module.exports.fbMock = function(numChildren) {
         this.callbacks.set = cb;
       }
     };
+
     this.update = (value, cb) => {
       this.callbacks.update = cb;
     };
+
     this.remove = (cb) => {
       this.callbacks.remove = cb;
     };
@@ -34,6 +51,13 @@ module.exports.fbMock = function(numChildren) {
       this.callbacks[method](value);
     };
 
+    this.callEvent = function(method, evt) {
+      this.callbacks[method][evt](...Array.prototype.slice.call(arguments, 2));
+    }.bind(this);
+
+    expect.spyOn(this, 'on').andCallThrough();
+    expect.spyOn(this, 'once').andCallThrough();
+    expect.spyOn(this, 'off').andCallThrough();
     expect.spyOn(this, 'set').andCallThrough();
     expect.spyOn(this, 'update').andCallThrough();
     expect.spyOn(this, 'remove').andCallThrough();
@@ -76,10 +100,13 @@ module.exports.valueMock = function() {
   return mock;
 };
 
-module.exports.snapshotMock = function(data) {
+module.exports.snapshotMock = function(data, key) {
   return {
     val: function() {
       return data;
+    },
+    key: function() {
+      return key;
     }
   };
 };

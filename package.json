@@ -22,11 +22,11 @@
   "scripts": {
     "lint": "eslint --quiet **/*.js",
     "test": "npm run lint && npm run test-node && npm run test-browser",
-    "test-browser": "mochify --recursive --transform [ babelify --presets [ es2015 ] ] --require babel-polyfill --reporter spec",
-    "dev-browser": "mochify --recursive --transform [ babelify --presets [ es2015 ] ] --require babel-polyfill --reporter spec --watch",
+    "test-browser": "mochify --recursive --transform [ babelify --presets [ es2015 ] --compact true ] --require babel-polyfill --reporter spec",
+    "dev-browser": "mochify --recursive --transform [ babelify --presets [ es2015 ] --compact true ] --require babel-polyfill --reporter spec --watch",
     "test-node": "mochify --recursive --node --reporter spec",
     "dev-node": "mochify --recursive --node --reporter spec --watch",
-    "cover": "mochify --recursive --transform [ babelify --presets [ es2015 ] ] --require babel-polyfill --plugin [ mochify-istanbul --report lcovonly --report html --dir ./coverage --exclude '**/+(test|node_modules)/**/*']",
+    "cover": "mochify --recursive --transform [ babelify --presets [ es2015 ] --compact false ] --require babel-polyfill --plugin [ mochify-istanbul --report lcovonly --report html --dir ./coverage --exclude '**/+(test|node_modules)/**/*']",
     "coverage": "npm run cover && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
     "preversion": "npm test"
   },
