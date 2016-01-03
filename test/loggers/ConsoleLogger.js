@@ -1,9 +1,9 @@
 'use strict';
 
 const expect = require('expect');
-const Logger = require('../Logger');
+const Logger = require('../../loggers/ConsoleLogger');
 
-describe('Logger', () => {
+describe('ConsoleLogger', () => {
 
   describe('push', () => {
     let logger = new Logger();
@@ -13,7 +13,7 @@ describe('Logger', () => {
 
     expect.spyOn(console, 'log');
     logger.push(msg);
-    expect(console.log.calls[0].arguments[0]).toBe(JSON.stringify(msg));
+    expect(console.log.calls[0].arguments[0]).toBe('Unauthenticated - ' + JSON.stringify(msg));
     expect.restoreSpies();
   });
 

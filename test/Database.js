@@ -29,7 +29,8 @@ describe('Database', () => {
 
   it('emits "login" event and sets uid and auth properties on successful login', () => {
     let fb = fbmocks.authMock(null);
-    let db = new Database(fb);
+    let logger = {setSession: expect.createSpy(), clearSession: expect.createSpy()};
+    let db = new Database(fb, logger);
     let onLogin = expect.createSpy();
     let data = {
       uid: '1234',
@@ -45,12 +46,14 @@ describe('Database', () => {
     expect(onLogin.calls.length).toBe(1);
     expect(db.uid).toBe('1234');
     expect(db.auth.key).toBe('value');
+    expect(logger.setSession).toHaveBeenCalledWith('1234');
 
   });
 
   it('emits "logout" event and unsets uid and auth properties on successful logout', () => {
     let fb = fbmocks.authMock(null);
-    let db = new Database(fb);
+    let logger = {setSession: expect.createSpy(), clearSession: expect.createSpy()};
+    let db = new Database(fb, logger);
     let data = {
       uid: '1234',
       auth: {
@@ -62,9 +65,11 @@ describe('Database', () => {
       db.once('logout', () => {
         expect(db.uid).toBe(undefined);
         expect(db.auth).toBe(undefined);
+        expect(logger.clearSession).toHaveBeenCalled();
       });
       expect(db.uid).toBe('1234');
       expect(db.auth.key).toBe('value');
+      expect(logger.setSession).toHaveBeenCalledWith('1234');
       fb.callAuthCallback(null);
     });
     fb.callAuthCallback(data);

@@ -18,7 +18,7 @@ class Handle {
   }
 
   watch() {
-    console.warn('`watch` should be overwritten in subclass');
+    console.warn(this.constructor.name + ' - `watch` should be overwritten in subclass');
   }
 
   on(event, handler) {

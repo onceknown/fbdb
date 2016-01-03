@@ -30,10 +30,12 @@ class Database extends Handle {
     this.fb.onAuth((data) => {
       if (data) {
         setAuthFields.call(this, data);
+        this.logger.setSession(this.uid);
         this.emit('login', data);
       } else {
         delete this.uid;
         delete this.auth;
+        this.logger.clearSession();
         this.emit('logout');
       }
     });

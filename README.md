@@ -20,7 +20,7 @@ const memoize = require('lodash.memoize');
 const Firebase = require('firebase');
 
 const Database = require('fbdb/Database');
-const Logger = require('fbdb/Logger');
+const Logger = require('fbdb/loggers/ConsoleLogger');
 
 const UsersRefs = require('./UsersRefs');
 const UsersService = require('./UserService');
@@ -32,7 +32,7 @@ module.exports = memoize((firebaseUrl) => {
 
   let fb = new Firebase(firebaseUrl);
 
-  let logger = new Logger();
+  let logger = new ConsoleLogger();
   let db = new Database(fb, logger);
 
   db.add({
@@ -85,8 +85,7 @@ The `Database` instance is the core singleton of `fbdb`.  It is the root of your
 
 ### Logger
 
-One of the biggest challenges of a server-not-required application architecture is ensuring visibility into your running applications. Every component in `fbdb` expects to be initialized with a `Logger` instance.  You can extend the base `Logger`
-to use the client-side logging mechanism of your choice. [Loggly](https://www.loggly.com/docs/javascript/), [Raven](https://docs.getsentry.com/hosted/clients/javascript/) and [Winston](https://github.com/winstonjs/winston) implementations are coming soon.
+One of the biggest challenges of a server-not-required application architecture is ensuring visibility into your running applications. Every component in `fbdb` expects to be initialized with a `Logger` instance.  You can implement `Logger`'s interface, `push()`, `setSession()` and `clearSession()`, to use the client-side logging mechanism of your choice. A [Loggly](https://www.loggly.com/docs/javascript/) implementation is included, with [Raven](https://docs.getsentry.com/hosted/clients/javascript/) and [Winston](https://github.com/winstonjs/winston) coming soon.
 
 ### Refs
 
@@ -176,7 +175,7 @@ Your application's `Handle` subclasses must extend `Handle` to take advantage of
 
 #### handles/Entity
 
-The `Entity` handle provides the interface for a single entity in your data model. It binds to the 'value' event of the passed in firebase reference, emitting a 'change' event.  It provides `set`, `setWithPriority`, `remove` and `update` methods for mutating the entity, wrapping the firebase callback flow with ES6 promises.
+The `Entity` handle provides the interface for a single entity in your data model. It binds to the 'value' event of the passed in firebase reference, emitting a 'change' event.  It provides `set`, `remove` and `update` methods for mutating the entity, wrapping the firebase callback flow with ES6 promises.
 
 If you define a `validate` method in your subclass, it will be called before a write is attempted to Firebase. Return `undefined` on successful validation, some form of error object on failure.
 
@@ -253,6 +252,6 @@ The `Connection` handle provides an easy wrapper around Firebase's presence capa
 ## Roadmap
 
 * Add `handles/IndexedList` and `handles/QueriedList`
-* Add `loggers/LogglyLogger`, `loggers/RavenLogger` and `loggers/WinstonLogger`
+* Add `loggers/RavenLogger` and `loggers/WinstonLogger`
 * Add HTTP server for easily serving your `fbdb` API to http clients
 * Add `fbdb/Task` and worker server utilizing [firebase-queue](https://github.com/firebase/firebase-queue)
