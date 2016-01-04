@@ -91,6 +91,7 @@ class Entity extends Handle {
       this.fb.off('value', this.watcher);
       delete this.watcher;
       delete this.data;
+      this.emit('unwatched');
     }
   }
 

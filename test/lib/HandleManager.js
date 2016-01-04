@@ -8,6 +8,20 @@ const HandleManager = require('../../lib/HandleManager');
 
 describe('HandleManager', () => {
 
+  it('deletes handle from cache on handles "unwatched" event', () => {
+    class Tester extends Handle {}
+    let manager = new HandleManager();
+    let fb = fbmocks.fbMock();
+    let resolver = expect.createSpy().andReturn(fb);
+
+    manager.register(Tester, resolver);
+
+    let handle = manager.get(Tester);
+
+    handle.emit('unwatched');
+    expect(manager.get(Tester)).toNotBe(handle);
+  });
+
   describe('register', () => {
 
     it('throws if Constructor does not extend Handle', () => {

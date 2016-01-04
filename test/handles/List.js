@@ -138,4 +138,38 @@ describe('handles/List', () => {
 
   });
 
+  describe('off', () => {
+
+    it('kills firebase subscription if no event handlers left, clears data, and emits "unwatched"', () => {
+      let mock = fbmocks.fbMock();
+      let handle = new List(mock);
+      let changeHandler = handle.on('change', expect.createSpy());
+      let addedHandler = handle.on('added', expect.createSpy());
+      let removedHandler = handle.on('removed', expect.createSpy());
+
+      let unwatchedHandler = expect.createSpy();
+
+      handle.watch();
+      let addedWatcher = handle.addedWatcher;
+      let removedWatcher = handle.removedWatcher;
+      let movedWatcher = handle.movedWatcher;
+
+      handle.once('unwatched', unwatchedHandler);
+      handle.off('change', changeHandler);
+      handle.off('added', addedHandler);
+      handle.off('removed', removedHandler);
+
+      expect(mock.off).toHaveBeenCalledWith('child_added', addedWatcher);
+      expect(mock.off).toHaveBeenCalledWith('child_removed', removedWatcher);
+      expect(mock.off).toHaveBeenCalledWith('child_moved', movedWatcher);
+      expect(unwatchedHandler).toHaveBeenCalled();
+      expect(handle.addedWatcher).toBe(undefined);
+      expect(handle.removedWatcher).toBe(undefined);
+      expect(handle.movedWatcher).toBe(undefined);
+      expect(handle.ids).toEqual([]);
+      expect(handle.handles).toEqual({});
+    });
+
+  });
+
 });

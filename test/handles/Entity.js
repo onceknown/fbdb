@@ -341,19 +341,22 @@ describe('handles/Entity', () => {
 
   describe('off', () => {
 
-    it('kills firebase subscription if no "change" handlers left and clears data', () => {
+    it('kills firebase subscription if no "change" handlers left, clears data, and emits "unwatched"', () => {
       let mock = fbmocks.fbMock();
       let handle = new Entity(mock);
       let handler = handle.on('change', expect.createSpy());
+      let unwatchedHandler = expect.createSpy();
 
       handle.watch();
       let watcher = handle.watcher;
 
+      handle.once('unwatched', unwatchedHandler);
       handle.off('change', handler);
 
       expect(mock.off).toHaveBeenCalledWith('value', watcher);
       expect(handle.watcher).toBe(undefined);
       expect(handle.data).toBe(undefined);
+      expect(unwatchedHandler).toHaveBeenCalled();
     });
 
 

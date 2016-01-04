@@ -95,6 +95,7 @@ class List extends Handle {
       delete this.addedWatcher;
       delete this.removedWatcher;
       delete this.movedWatcher;
+      this.emit('unwatched');
     }
   }
 
