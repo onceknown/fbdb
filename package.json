@@ -1,6 +1,6 @@
 {
   "name": "fbdb",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "description": "Isomorphic javascript library for creating encapsulated, testable Firebase service layers",
   "devDependencies": {
     "babel-istanbul": "^0.5.9",
