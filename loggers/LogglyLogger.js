@@ -1,9 +1,7 @@
 /* global LogglyTracker */
 'use strict';
 
-const Logger = require('../Logger');
-
-class LogglyLogger extends Logger {
+class LogglyLogger {
 
   constructor(logglyKey, tags) {
     this.logger = new LogglyTracker();
