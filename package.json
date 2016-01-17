@@ -48,5 +48,6 @@
   "bugs": {
     "url": "https://github.com/dannydavidson/fbdb/issues"
   },
-  "homepage": "https://github.com/dannydavidson/fbdb#readme"
+  "homepage": "https://github.com/dannydavidson/fbdb#readme",
+  "browserify": { "transform": [ ["babelify", {"presets": [ "es2015" ], "compact": false}] ] }
 }
