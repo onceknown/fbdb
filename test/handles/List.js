@@ -166,7 +166,7 @@ describe('handles/List', () => {
       expect(handle.addedWatcher).toBe(undefined);
       expect(handle.removedWatcher).toBe(undefined);
       expect(handle.movedWatcher).toBe(undefined);
-      expect(handle.ids).toEqual([]);
+      expect(handle.index).toEqual([]);
       expect(handle.handles).toEqual({});
     });
 

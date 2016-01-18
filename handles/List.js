@@ -3,25 +3,25 @@
 const Handle = require('../Handle');
 
 const addChild = function(prevKey, key, handle) {
-  let prevIndex = prevKey === null ? -1 : this.ids.indexOf(prevKey);
+  let prevIndex = prevKey === null ? -1 : this.index.indexOf(prevKey);
   let insertionIndex = prevIndex + 1;
 
-  this.ids.splice(insertionIndex, 0, key);
+  this.index.splice(insertionIndex, 0, key);
   this.handles[key] = handle;
 };
 
 const moveChild = function(key, prevKey) {
   removeChild.call(this, key, true);
-  let prevIndex = prevKey === null ? -1 : this.ids.indexOf(prevKey);
+  let prevIndex = prevKey === null ? -1 : this.index.indexOf(prevKey);
   let insertionIndex = prevIndex + 1;
 
-  this.ids.splice(insertionIndex, 0, key);
+  this.index.splice(insertionIndex, 0, key);
 };
 
 const removeChild = function(removedId, keepHandle) {
   let removedHandle;
 
-  this.ids = this.ids.filter((id) => {
+  this.index = this.index.filter((id) => {
     return id !== removedId;
   });
 
@@ -35,15 +35,15 @@ class List extends Handle {
   get data() {
     let data = [];
 
-    for (let i = 0; i < this.ids.length; i++) {
-      data.push(this.handles[this.ids[i]]);
+    for (let i = 0; i < this.index.length; i++) {
+      data.push(this.handles[this.index[i]]);
     }
     return data;
   }
 
   constructor() {
     super(...arguments);
-    this.ids = [];
+    this.index = [];
     this.handles = {};
   }
 
@@ -90,7 +90,7 @@ class List extends Handle {
       this.fb.off('child_added', this.addedWatcher);
       this.fb.off('child_removed', this.removedWatcher);
       this.fb.off('child_moved', this.movedWatcher);
-      this.ids = [];
+      this.index = [];
       this.handles = {};
       delete this.addedWatcher;
       delete this.removedWatcher;
