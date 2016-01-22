@@ -126,6 +126,11 @@ module.exports.authMock = function(getAuthValue) {
     },
     callAuthWithCustomTokenCallback: function(err, data) {
       this.authWithCustomTokenCallback(err, data);
+    },
+    constructor: {
+      ServerValue: {
+        TIMESTAMP: 1
+      }
     }
   };
 

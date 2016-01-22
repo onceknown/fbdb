@@ -16,6 +16,10 @@ const setAuthFields = function(data) {
 
 class Database extends Handle {
 
+  get TIMESTAMP() {
+    return this.fb.constructor.ServerValue.TIMESTAMP;
+  }
+
   constructor(fb, logger) {
     super();
     this.fb = fb;
@@ -68,7 +72,6 @@ class Database extends Handle {
       console.warn('`Database.add` was called incorrectly, service was not added.');
     }
   }
-
 
 }
 

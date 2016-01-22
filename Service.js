@@ -4,12 +4,16 @@ const HandleManager = require('./lib/HandleManager');
 
 class Service {
 
-  constructor(database, logger) {
-    this.database = database;
+  get TIMESTAMP() {
+    return this.db.TIMESTAMP;
+  }
+
+  constructor(db, logger) {
+    this.db = db;
     this.logger = logger;
     this.handles = new HandleManager(this, logger);
 
-    database.on('logout', () => {
+    db.on('logout', () => {
       this.off();
     });
   }

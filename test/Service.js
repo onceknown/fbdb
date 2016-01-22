@@ -7,7 +7,7 @@ const Entity = require('../handles/Entity');
 
 describe('Service', () => {
 
-  let db = {on: expect.createSpy()};
+  let db = {on: expect.createSpy(), TIMESTAMP: 1};
 
   it('registers for database logout on construction', () => {
     let service = new Service(db);
@@ -73,6 +73,18 @@ describe('Service', () => {
       expect.spyOn(service.handles, 'off');
       service.off();
       expect(service.handles.off.calls.length).toBe(1);
+    });
+
+  });
+
+  describe('TIMESTAMP', () => {
+
+    it('delegates to db.TIMESTAMP', () => {
+      let service = new Service(db);
+      let stamp = service.TIMESTAMP;
+
+      expect(stamp).toBe(db.TIMESTAMP);
+
     });
 
   });

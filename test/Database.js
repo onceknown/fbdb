@@ -155,4 +155,15 @@ describe('Database', () => {
       expect.restoreSpies();
     });
   });
+
+  describe('TIMESTAMP', () => {
+
+    it('delegates to firebase ServerValue', () => {
+      let mock = fbmocks.authMock(null);
+      let db = new Database(mock);
+
+      expect(db.TIMESTAMP).toBe(mock.constructor.ServerValue.TIMESTAMP);
+    });
+
+  });
 });
