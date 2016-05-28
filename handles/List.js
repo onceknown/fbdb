@@ -55,7 +55,7 @@ class List extends Handle {
     }
 
     this.addedWatcher = this.fb.on('child_added', (snapshot, prevKey) => {
-      let key = snapshot.key();
+      let key = snapshot.key;
       let handle = this.getEntity(key);
       let added = addChild.call(this, prevKey, key, handle);
 
@@ -64,7 +64,7 @@ class List extends Handle {
     });
 
     this.removedWatcher = this.fb.on('child_removed', (snapshot) => {
-      let key = snapshot.key();
+      let key = snapshot.key;
 
       removeChild.call(this, key);
       this.emit('removed', key);
@@ -72,7 +72,7 @@ class List extends Handle {
     });
 
     this.movedWatcher = this.fb.on('child_moved', (snapshot, prevKey) => {
-      let key = snapshot.key();
+      let key = snapshot.key;
 
       moveChild.call(this, key, prevKey);
       this.emit('change', this.data);

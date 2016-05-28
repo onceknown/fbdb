@@ -116,10 +116,10 @@ module.exports.valueMock = function() {
 
 module.exports.snapshotMock = function(data, key) {
   return {
-    val: function() {
+    get val() {
       return data;
     },
-    key: function() {
+    get key() {
       return key;
     }
   };

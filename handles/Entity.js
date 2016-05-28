@@ -22,7 +22,7 @@ class Entity extends Handle {
     }
     this.watcher = this.fb.on('value',
       (snapshot) => {
-        this.data = snapshot.val();
+        this.data = snapshot.val;
         this.emitChange(this);
       },
       (err) => {
