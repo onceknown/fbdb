@@ -2,28 +2,28 @@
 
 const Handle = require('../Handle');
 
-const emitChange = function() {
-  if (this.data !== null) {
-    this.emit('change', this.data);
-  }
-};
-
 class Entity extends Handle {
 
   get id() {
     return this.fb.key();
   }
 
+  emitChange() {
+    if (this.data !== null) {
+      this.emit('change', this.data);
+    }
+  }
+
   watch() {
     if (this.watcher) {
       return process.nextTick(() => {
-        emitChange.call(this);
+        this.emitChange();
       });
     }
     this.watcher = this.fb.on('value',
       (snapshot) => {
         this.data = snapshot.val();
-        emitChange.call(this);
+        this.emitChange(this);
       },
       (err) => {
         this.emit('disconnect', err);

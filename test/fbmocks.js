@@ -43,6 +43,13 @@ module.exports.fbMock = function(numChildren) {
       this.callbacks.update = cb;
     };
 
+    this.transaction = (fn, cb) => {
+      this.callbacks.transaction = {
+        fn: fn,
+        cb: cb
+      };
+    };
+
     this.remove = (cb) => {
       this.callbacks.remove = cb;
     };
@@ -55,11 +62,18 @@ module.exports.fbMock = function(numChildren) {
       this.callbacks[method][evt](...Array.prototype.slice.call(arguments, 2));
     }.bind(this);
 
+    this.callTransactionWithValue = (value, err, committed) => {
+      let newValue = this.callbacks.transaction.fn(value);
+
+      this.callbacks.transaction.cb(err, committed, module.exports.snapshotMock(newValue));
+    };
+
     expect.spyOn(this, 'on').andCallThrough();
     expect.spyOn(this, 'once').andCallThrough();
     expect.spyOn(this, 'off').andCallThrough();
     expect.spyOn(this, 'set').andCallThrough();
     expect.spyOn(this, 'update').andCallThrough();
+    expect.spyOn(this, 'transaction').andCallThrough();
     expect.spyOn(this, 'remove').andCallThrough();
 
     if (numChildrenStubbed < numChildren) {

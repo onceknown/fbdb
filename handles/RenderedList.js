@@ -1,42 +1,26 @@
 'use strict';
 
-const Handle = require('../Handle');
+const isEqual = require('lodash.isequal');
+const IndexedList = require('./IndexedList');
 
-class IndexedList extends Handle {
+class RenderedList extends IndexedList {
 
-  get data() {
-    let data = [];
+  buildList(newList, done) {
+    let completed = 0;
+    let newIndex = Object.keys(newList);
 
-    for (let i = 0; i < this.index.length; i++) {
-      data.push(this.handles[this.index[i]]);
-    }
-    return data;
-  }
+    if (!isEqual(this.index, newIndex)) {
+      this.index = newIndex;
+      this.index.forEach((id) => {
+        let handle = this.handles[id] = this.getEntity(id);
 
-  constructor() {
-    super(...arguments);
-    this.index = [];
-    this.handles = {};
-  }
-
-  watch() {
-    if (this.indexWatcher) {
-      return process.nextTick(() => {
-        this.emit('change', this.data);
+        handle.once('change', () => {
+          if(++completed === newIndex.length) {
+            done();
+          }
+        });
       });
     }
-
-    this.indexWatcher = this.fb.on('value', (snapshot) => {
-      let list = snapshot.val();
-
-      if (list) {
-        this.buildList(list, () => {
-          this.emit('change', this.data);
-        });
-      } else {
-        this.emit('change', this.data);
-      }
-    });
   }
 
   moveBefore(movedId, referenceId) {
@@ -52,10 +36,9 @@ class IndexedList extends Handle {
 
             if (insertionIndex !== -1) {
               index.splice(insertionIndex, 0, movedId);
+              return index;
             }
           }
-
-          return index;
         },
         (err, committed, snapshot) => {
           if (!err && committed) {
@@ -82,10 +65,9 @@ class IndexedList extends Handle {
 
             if (insertionIndex !== -1) {
               index.splice(insertionIndex + 1, 0, movedId);
+              return index;
             }
           }
-
-          return index;
         },
         (err, committed, snapshot) => {
           if (!err && committed) {
@@ -98,39 +80,6 @@ class IndexedList extends Handle {
         });
     });
   }
-
-  buildList(newIndex, done) {
-    let completed = 0;
-
-    this.index = newIndex;
-    this.handles = {};
-
-    this.index.forEach((id) => {
-      let handle = this.handles[id] = this.getEntity(id);
-
-      handle.once('change', () => {
-        if(++completed === newIndex.length) {
-          done();
-        }
-      });
-    });
-  }
-
-  getEntity(id) {
-    console.warn('`getEntity` should be defined in your subclass');
-  }
-
-  off() {
-    super.off(...arguments);
-    if (!this.hasEventsFor('change')) {
-      this.fb.off('value', this.indexWatcher);
-      this.index = [];
-      this.handles = {};
-      delete this.indexWatcher;
-      this.emit('unwatched');
-    }
-  }
-
 }
 
-module.exports = IndexedList;
+module.exports = RenderedList;

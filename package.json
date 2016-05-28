@@ -49,5 +49,20 @@
     "url": "https://github.com/dannydavidson/fbdb/issues"
   },
   "homepage": "https://github.com/dannydavidson/fbdb#readme",
-  "browserify": { "transform": [ ["babelify", {"presets": [ "es2015" ], "compact": false}] ] }
+  "browserify": {
+    "transform": [
+      [
+        "babelify",
+        {
+          "presets": [
+            "es2015"
+          ],
+          "compact": false
+        }
+      ]
+    ]
+  },
+  "dependencies": {
+    "lodash.isequal": "^4.0.0"
+  }
 }
