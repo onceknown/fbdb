@@ -26,8 +26,7 @@
     "test-node": "mochify --recursive --node --reporter spec",
     "dev-node": "mochify --recursive --node --reporter spec --watch",
     "cover": "mochify --recursive --transform [ babelify --presets [ es2015 ] --compact false ] --require babel-polyfill --plugin [ mochify-istanbul --report lcovonly --report html --dir ./coverage --exclude '**/+(test|node_modules)/**/*']",
-    "coverage": "npm run cover && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
-    "preversion": "npm test"
+    "coverage": "npm run cover && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
   },
   "repository": {
     "type": "git",
