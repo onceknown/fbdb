@@ -42,7 +42,7 @@ class RenderedList extends IndexedList {
         },
         (err, committed, snapshot) => {
           if (!err && committed) {
-            resolve(snapshot.val);
+            resolve(snapshot.val());
           } else if (err) {
             reject(err);
           } else if (!committed) {
@@ -71,7 +71,7 @@ class RenderedList extends IndexedList {
         },
         (err, committed, snapshot) => {
           if (!err && committed) {
-            resolve(snapshot.val);
+            resolve(snapshot.val());
           } else if (err) {
             reject(err);
           } else if (!committed) {

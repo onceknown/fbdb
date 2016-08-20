@@ -27,7 +27,7 @@ class IndexedList extends Handle {
     }
 
     this.indexWatcher = this.fb.on('value', (snapshot) => {
-      let list = snapshot.val;
+      let list = snapshot.val();
 
       if (list) {
         this.buildList(list, () => {
@@ -59,7 +59,7 @@ class IndexedList extends Handle {
         },
         (err, committed, snapshot) => {
           if (!err && committed) {
-            resolve(snapshot.val);
+            resolve(snapshot.val());
           } else if (err) {
             reject(err);
           } else if (!committed) {
@@ -89,7 +89,7 @@ class IndexedList extends Handle {
         },
         (err, committed, snapshot) => {
           if (!err && committed) {
-            resolve(snapshot.val);
+            resolve(snapshot.val());
           } else if (err) {
             reject(err);
           } else if (!committed) {

@@ -5,7 +5,7 @@ const Handle = require('../Handle');
 class Entity extends Handle {
 
   get id() {
-    return this.fb.key();
+    return this.fb.key;
   }
 
   emitChange() {
@@ -22,7 +22,7 @@ class Entity extends Handle {
     }
     this.watcher = this.fb.on('value',
       (snapshot) => {
-        this.data = snapshot.val;
+        this.data = snapshot.val();
         this.emitChange(this);
       },
       (err) => {

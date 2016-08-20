@@ -6,14 +6,14 @@ const getChildRef = function(parent, child) {
 
 class Refs {
 
-  constructor(fb) {
-    this.fb = fb;
+  constructor(rootRef) {
+    this.rootRef = rootRef;
   }
 
   get() {
     let path = Array.prototype.slice.call(arguments);
 
-    return path.reduce(getChildRef, this.fb);
+    return path.reduce(getChildRef, this.rootRef);
   }
 
 }

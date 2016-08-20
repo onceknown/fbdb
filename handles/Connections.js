@@ -16,7 +16,7 @@ class Connections {
       this.infoFb = this.fb('/.info/connected');
       this.connectionWatcher = this.infoFb.on('value',
         (snapshot) => {
-          if (snapshot.val) {
+          if (snapshot.val()) {
             return this.connect();
           }
           return this.disconnect();
@@ -45,7 +45,7 @@ class Connections {
 
       this.listWatcher = this.fb.on('value',
         (snapshot) => {
-          this.data = snapshot.val;
+          this.data = snapshot.val();
           this.emit('change', this.data);
         },
         (err) => {

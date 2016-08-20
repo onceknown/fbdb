@@ -17,21 +17,21 @@ const setAuthFields = function(data) {
 class Database extends Handle {
 
   get TIMESTAMP() {
-    return this.fb.constructor.ServerValue.TIMESTAMP;
+    return this.firebase.database.ServerValue.TIMESTAMP;
   }
 
-  constructor(fb, logger) {
+  get root() {
+    return this.fb.ref('/');
+  }
+
+  constructor(firebase, logger) {
     super();
-    this.fb = fb;
+    this.firebase = firebase;
+    this.fb = firebase.database();
+    this.fbAuth = firebase.auth();
     this.logger = logger;
 
-    let authData = this.fb.getAuth();
-
-    if (authData !== null) {
-      setAuthFields.call(this, authData);
-    }
-
-    this.fb.onAuth((data) => {
+    this.fbAuth.onAuthStateChanged((data) => {
       if (data) {
         setAuthFields.call(this, data);
         this.logger.setSession(this.uid);
@@ -46,16 +46,17 @@ class Database extends Handle {
   }
 
   login(token) {
-    this.fb.authWithCustomToken(token, (err) => {
-      if (err) {
-        this.emit('login-error', err);
-      }
-    });
+    this.fbAuth.signInWithCustomToken(token)
+      .catch((err) => {
+        if (err) {
+          this.emit('login-error', err);
+        }
+      });
     return this;
   }
 
   logout() {
-    this.fb.unauth();
+    this.fbAuth.signOut();
     return this;
   }
 
