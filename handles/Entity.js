@@ -23,7 +23,7 @@ class Entity extends Handle {
     this.watcher = this.fb.on('value',
       (snapshot) => {
         this.data = snapshot.val();
-        this.emitChange(this);
+        this.emitChange();
       },
       (err) => {
         this.emit('disconnect', err);
@@ -89,8 +89,6 @@ class Entity extends Handle {
     super.off(...arguments);
     if (!this.hasEventsFor('change')) {
       this.fb.off('value', this.watcher);
-      delete this.watcher;
-      delete this.data;
       this.emit('unwatched');
     }
   }

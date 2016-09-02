@@ -4,13 +4,18 @@ const Handle = require('../Handle');
 
 class IndexedList extends Handle {
 
-  get data() {
-    let data = [];
+  get key() {
+    return 'key';
+  }
 
-    for (let i = 0; i < this.index.length; i++) {
-      data.push(this.handles[this.index[i]]);
-    }
-    return data;
+  get data() {
+
+    return this.index.map((record) => {
+      if (typeof record === 'string') {
+        return this.handles[record];
+      }
+      return this.handles[record[this.key]];
+    });
   }
 
   constructor() {
@@ -105,8 +110,9 @@ class IndexedList extends Handle {
     this.index = newIndex;
     this.handles = {};
 
-    this.index.forEach((id) => {
-      let handle = this.handles[id] = this.getEntity(id);
+    this.index.forEach((data) => {
+      let key = typeof data === 'string' ? data : data[this.key];
+      let handle = this.handles[key] = this.getEntity(data);
 
       handle.once('change', () => {
         if(++completed === newIndex.length) {
@@ -124,8 +130,6 @@ class IndexedList extends Handle {
     super.off(...arguments);
     if (!this.hasEventsFor('change')) {
       this.fb.off('value', this.indexWatcher);
-      this.index = [];
-      this.handles = {};
       delete this.indexWatcher;
       this.emit('unwatched');
     }
